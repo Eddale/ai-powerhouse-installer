@@ -362,6 +362,16 @@ else
         done
     fi
 
+    # Make sure ~/.local/bin is in .zshrc permanently (not just this session)
+    # The Claude installer sometimes misses this, especially after a bash→zsh switch
+    if [[ -x "$HOME/.local/bin/claude" ]]; then
+        if ! grep -q '.local/bin' "$HOME/.zshrc" 2>/dev/null; then
+            echo '' >> "$HOME/.zshrc"
+            echo '# Claude Code (added by AI Powerhouse installer)' >> "$HOME/.zshrc"
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
+        fi
+    fi
+
     if command -v claude &>/dev/null; then
         ok "Claude Code installed"
     else
